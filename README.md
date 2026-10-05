@@ -17,30 +17,39 @@ Under standard tokenizers, Indic scripts (like Hindi and Telugu) suffer from sev
 ```text
 phase_1/
 ├── configs/
-│   └── memory_wall_config.yaml   # Step 2: GPU sweep config (prompts, K values, token limits)
+│   ├── memory_wall_config.yaml   # Step 2: GPU sweep config (prompts, K values, token limits)
+│   └── logit_lens_config.yaml    # Step 3: Multilingual cloze prompts for pivot check
 ├── src/
 │   ├── __init__.py
 │   ├── tokenization_tax/         # Step 1: Fertility & Analytical KV Scaling
 │   │   ├── __init__.py
 │   │   ├── calculator.py         # Empirical fertility engine (tokens/word, char, byte)
 │   │   └── memory_projection.py  # Analytical KV cache footprint & OOM simulator
-│   └── tts/                      # Step 2: Test-Time Scaling & Empirical Memory Wall
+│   ├── tts/                      # Step 2: Test-Time Scaling & Empirical Memory Wall
+│   │   ├── __init__.py
+│   │   ├── memory_tracker.py     # GPU VRAM telemetry & OOM handler
+│   │   └── memory_wall_sweep.py  # Batched K generation & empirical OOM boundary sweep
+│   └── interpretability/         # Step 3: Logit-Lens & Mechanistic Interpretability
 │       ├── __init__.py
-│       ├── memory_tracker.py     # GPU VRAM telemetry & OOM handler
-│       └── memory_wall_sweep.py  # Batched K generation & empirical OOM boundary sweep
+│       └── logit_lens.py         # Intermediate hidden state projection via RMSNorm + lm_head
 ├── scripts/
 │   ├── run_fertility_check.py    # Step 1 runner (CPU, ~15s): FLORES-200 fertility analysis
-│   └── run_memory_wall_sweep.py  # Step 2 runner (GPU): Real-time peak VRAM sweep on RTX 3050
+│   ├── run_memory_wall_sweep.py  # Step 2 runner (GPU): Real-time peak VRAM sweep on RTX 3050
+│   └── run_logit_lens.py         # Step 3 runner (GPU): Layer-wise pivot check & heatmap
 ├── tests/
 │   ├── test_fertility.py         # Unit tests for Step 1
-│   └── test_memory_tracker.py    # Unit tests for Step 2
+│   ├── test_memory_tracker.py    # Unit tests for Step 2
+│   └── test_logit_lens.py        # Unit tests for Step 3
 ├── results/
 │   ├── fertility_table.csv       # Step 1: Raw measured fertility data
 │   ├── fertility_table.md        # Step 1: Presentation markdown table
 │   ├── fertility_comparison.png  # Step 1: Publication bar chart
 │   ├── kv_memory_scaling_qwen3.png # Step 1: Analytical KV curves vs 24GB wall
-│   ├── memory_wall_empirical.csv # Step 2: (Generated upon run) Empirical peak VRAM per K
-│   └── memory_wall_curve.png     # Step 2: (Generated upon run) Real GPU memory wall plot
+│   ├── memory_wall_empirical.csv # Step 2: Measured peak VRAM per K
+│   ├── memory_wall_curve.png     # Step 2: Real GPU memory wall plot
+│   ├── logit_lens_summary.md     # Step 3: (Generated upon run) Layer-wise English prob
+│   ├── logit_lens_trajectory.png # Step 3: (Generated upon run) Layer-by-layer transition
+│   └── logit_lens_heatmap.png    # Step 3: (Generated upon run) English pivot heatmap
 ├── project_idea.MD               # Core research specification and protocol
 ├── Capstone_Project_Proposal.pdf # PES University official proposal document
 ├── capstone_execution_plan.pdf   # Phased timeline and milestones
@@ -120,7 +129,29 @@ phase_1/
 
 ---
 
-##  How to Run the Code
+## 🧠 Step 3: Logit-Lens Multilingual Pivot Check (Pillar A Gate)
+
+### 10. `configs/logit_lens_config.yaml`
+* **What it does:** Defines 8 balanced, multilingual factual cloze test cases across Hindi and Telugu with paired English target tokens (e.g. capitals, colors, cardinal directions, natural science facts).
+
+### 11. `src/interpretability/logit_lens.py`
+* **What it does:** Implements the `LogitLensAnalyzer` class.
+  - Takes hidden states from every layer ($0 \dots 24$).
+  - **Applies the final RMSNorm (`model.model.norm`)**: Essential so that intermediate activations are correctly scaled before vocabulary projection.
+  - Unembeds through `model.lm_head` to extract the vocabulary probability distribution at each layer.
+  - Measures the probability allocated to the English concept token vs. the native token across transformer depth.
+
+### 12. `scripts/run_logit_lens.py`
+* **What it does:** Executes the complete logit-lens sweep across all test cases on GPU, computes layer-wise summaries, and plots:
+  - `results/logit_lens_trajectory.png`: Line plot showing probability of English vs Native token across layers (showing the early -> middle -> late transition).
+  - `results/logit_lens_heatmap.png`: High-resolution heatmap showing the emergence of the English pivot in intermediate layers.
+
+### 13. `tests/test_logit_lens.py`
+* **What it does:** Unit tests verifying that `LogitLensAnalyzer` initializes and hooks layers correctly.
+
+---
+
+## 🚀 How to Run the Code
 
 ### Step 1: Open Terminal and Activate Environment
 Ensure you are using the dedicated Conda environment (`capstone`):
@@ -150,13 +181,22 @@ $env:PYTHONPATH="d:\EBOOKS\Capstone\phase_1"
 python scripts/run_memory_wall_sweep.py
 ```
 
-### Step 5: Run Automated Unit Tests
+### Step 5: Run Step 3 (Logit-Lens Multilingual Pivot Check on GPU)
 ```powershell
 $env:PYTHONPATH="d:\EBOOKS\Capstone\phase_1"
 
-# Run tests for Step 1 & Step 2
+# Execute Step 3 GPU runner (Generates trajectory plot & pivot heatmap in ~1-2 minutes)
+python scripts/run_logit_lens.py
+```
+
+### Step 6: Run Automated Unit Tests
+```powershell
+$env:PYTHONPATH="d:\EBOOKS\Capstone\phase_1"
+
+# Run tests for Step 1, Step 2 & Step 3
 python tests/test_fertility.py
 python tests/test_memory_tracker.py
+python tests/test_logit_lens.py
 ```
 
 ---

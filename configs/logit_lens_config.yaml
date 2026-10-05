@@ -1,0 +1,103 @@
+# Configuration for Step 3: Logit-Lens Multilingual Pivot Check
+model:
+  id: "Qwen/Qwen2.5-0.5B"
+  torch_dtype: "float16"
+  device: "cuda"
+
+# Cloze-style test cases to test emergence of English pivot in intermediate layers
+test_cases:
+  # 1. France Capital
+  - concept: "france_capital"
+    language: "Hindi"
+    prompt: "फ्रांस की राजधानी है"
+    target_en: " Paris"
+    target_native: " पेरिस"
+  - concept: "france_capital"
+    language: "Telugu"
+    prompt: "ఫ్రాన్స్ రాజధాని"
+    target_en: " Paris"
+    target_native: " పారిస్"
+
+  # 2. Sky Color
+  - concept: "sky_color"
+    language: "Hindi"
+    prompt: "आसमान का रंग होता है"
+    target_en: " blue"
+    target_native: " नीला"
+  - concept: "sky_color"
+    language: "Telugu"
+    prompt: "ఆకాశం రంగు"
+    target_en: " blue"
+    target_native: " నీలం"
+
+  # 3. Milk Color
+  - concept: "milk_color"
+    language: "Hindi"
+    prompt: "दूध का रंग होता है"
+    target_en: " white"
+    target_native: " सफेद"
+  - concept: "milk_color"
+    language: "Telugu"
+    prompt: "పాలు రంగు"
+    target_en: " white"
+    target_native: " తెలుపు"
+
+  # 4. India Capital
+  - concept: "india_capital"
+    language: "Hindi"
+    prompt: "भारत की राजधानी है"
+    target_en: " Delhi"
+    target_native: " दिल्ली"
+  - concept: "india_capital"
+    language: "Telugu"
+    prompt: "భారతదేశ రాజధాని నగరం"
+    target_en: " Delhi"
+    target_native: " ఢిల్లీ"
+
+  # 5. Sun Direction
+  - concept: "sun_direction"
+    language: "Hindi"
+    prompt: "सूर्य किस दिशा में उगता है:"
+    target_en: " east"
+    target_native: " पूर्व"
+  - concept: "sun_direction"
+    language: "Telugu"
+    prompt: "సూర్యుడు ఏ దిశలో ఉదయిస్తాడు:"
+    target_en: " east"
+    target_native: " తూర్పు"
+
+  # 6. Ice Melting
+  - concept: "water_state"
+    language: "Hindi"
+    prompt: "बर्फ पिघलने पर बनती है"
+    target_en: " water"
+    target_native: " पानी"
+  - concept: "water_state"
+    language: "Telugu"
+    prompt: "మంచు కరిగినప్పుడు తయారయ్యేది"
+    target_en: " water"
+    target_native: " నీరు"
+
+  # 7. Apple Color
+  - concept: "apple_color"
+    language: "Hindi"
+    prompt: "पके हुए सेब का रंग होता है"
+    target_en: " red"
+    target_native: " लाल"
+  - concept: "apple_color"
+    language: "Telugu"
+    prompt: "పండిన ఆపిల్ రంగు"
+    target_en: " red"
+    target_native: " ఎరుపు"
+
+  # 8. Earth Shape
+  - concept: "earth_shape"
+    language: "Hindi"
+    prompt: "पृथ्वी का आकार है"
+    target_en: " round"
+    target_native: " गोल"
+  - concept: "earth_shape"
+    language: "Telugu"
+    prompt: "భూమి ఆకారం"
+    target_en: " round"
+    target_native: " గుండ్రంగా"

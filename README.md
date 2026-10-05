@@ -12,29 +12,35 @@ Under standard tokenizers, Indic scripts (like Hindi and Telugu) suffer from sev
 
 ---
 
-##  Repository Structure (Step 1 Deliverable)
+## 📂 Repository Structure
 
 ```text
 phase_1/
+├── configs/
+│   └── memory_wall_config.yaml   # Step 2: GPU sweep config (prompts, K values, token limits)
 ├── src/
 │   ├── __init__.py
-│   └── tokenization_tax/
+│   ├── tokenization_tax/         # Step 1: Fertility & Analytical KV Scaling
+│   │   ├── __init__.py
+│   │   ├── calculator.py         # Empirical fertility engine (tokens/word, char, byte)
+│   │   └── memory_projection.py  # Analytical KV cache footprint & OOM simulator
+│   └── tts/                      # Step 2: Test-Time Scaling & Empirical Memory Wall
 │       ├── __init__.py
-│       ├── calculator.py         # Empirical fertility engine (tokens/word, char, byte)
-│       └── memory_projection.py  # Analytical KV cache footprint & OOM boundary simulator
+│       ├── memory_tracker.py     # GPU VRAM telemetry & OOM handler
+│       └── memory_wall_sweep.py  # Batched K generation & empirical OOM boundary sweep
 ├── scripts/
-│   └── run_fertility_check.py    # Main CPU runner: fetches FLORES-200, runs tests, plots figures
+│   ├── run_fertility_check.py    # Step 1 runner (CPU, ~15s): FLORES-200 fertility analysis
+│   └── run_memory_wall_sweep.py  # Step 2 runner (GPU): Real-time peak VRAM sweep on RTX 3050
 ├── tests/
-│   └── test_fertility.py         # Automated pytest/unit test verifying math & tokenizer contracts
+│   ├── test_fertility.py         # Unit tests for Step 1
+│   └── test_memory_tracker.py    # Unit tests for Step 2
 ├── results/
-│   ├── fertility_table.csv       # Raw measured fertility & inflation data
-│   ├── fertility_table.md        # Formatted markdown table for presentations
-│   ├── kv_projection_qwen3.csv   # Target Qwen3-0.6B KV memory projections
-│   ├── kv_projection_qwen3.md    # Target Qwen3-0.6B markdown table
-│   ├── kv_projection_qwen25.csv  # Local Qwen2.5-0.5B KV memory projections
-│   ├── kv_projection_qwen25.md   # Local Qwen2.5-0.5B markdown table
-│   ├── fertility_comparison.png  # Publication-ready bar chart of tokenizer fertility
-│   └── kv_memory_scaling_qwen3.png # Analytical memory curves vs K paths (log scale)
+│   ├── fertility_table.csv       # Step 1: Raw measured fertility data
+│   ├── fertility_table.md        # Step 1: Presentation markdown table
+│   ├── fertility_comparison.png  # Step 1: Publication bar chart
+│   ├── kv_memory_scaling_qwen3.png # Step 1: Analytical KV curves vs 24GB wall
+│   ├── memory_wall_empirical.csv # Step 2: (Generated upon run) Empirical peak VRAM per K
+│   └── memory_wall_curve.png     # Step 2: (Generated upon run) Real GPU memory wall plot
 ├── project_idea.MD               # Core research specification and protocol
 ├── Capstone_Project_Proposal.pdf # PES University official proposal document
 ├── capstone_execution_plan.pdf   # Phased timeline and milestones
@@ -67,7 +73,7 @@ phase_1/
     - **RTX 4090 (24 GB VRAM):** Production target ceiling (~20.0 GB usable for KV).
 
 ### 3. `scripts/run_fertility_check.py`
-* **What it does:** The primary execution pipeline.
+* **What it does:** The primary execution pipeline for Step 1.
   1. Pulls 300 semantically identical parallel sentences from **FLORES-200** (English, Hindi, Telugu via the `facebook/belebele` test split).
   2. Runs the `TokenizationTaxCalculator` across `Qwen-2.5`, `Gemma-2/3`, and `Sarvam-1`.
   3. Feeds the measured inflation rates into `KVMemoryProjector`.
@@ -80,6 +86,37 @@ phase_1/
   - Tokenizers encode and decode parallel strings accurately and non-trivially.
   - The GQA KV-cache byte formula matches theoretical specs (verifying that `Qwen3-0.6B` outputs exactly $114,688\text{ bytes} \approx 112\text{ KB/token}$ in `fp16` and half that in `int8`).
 * **Why it was built:** Enforces software engineering rigor and test-driven reliability required for B.Tech capstone reviews.
+
+---
+
+## 🔬 Step 2: Empirical Memory Wall Sweep (Pillar B Miniature)
+
+### 5. `configs/memory_wall_config.yaml`
+* **What it does:** Centralized YAML configuration for Step 2.
+  - Configures model settings (`Qwen/Qwen2.5-0.5B`, `float16`, `cuda`).
+  - Sets sweep parameters: $K \in [1, 2, 4, 8, 12, 16, 20, 24]$ with `max_new_tokens: 256`.
+  - Defines matched GSM8K-style math reasoning prompts across English, Hindi, and Telugu.
+* **Why it was built:** Follows Section 9 (Reproducibility) of `project_idea.MD` by ensuring every run is config-driven rather than hard-coded.
+
+### 6. `src/tts/memory_tracker.py`
+* **What it does:** Interacts directly with PyTorch CUDA memory management:
+  - Records baseline VRAM prior to model loading.
+  - Computes exact static model weight footprint upon loading.
+  - Resets peak memory stats (`torch.cuda.reset_peak_memory_stats()`) before each generation trajectory.
+  - Isolates transient generation memory (KV cache + activations) from static weights.
+  - Implements emergency CUDA cache flushing (`torch.cuda.empty_cache()` and garbage collection) upon catching CUDA Out-Of-Memory errors.
+
+### 7. `src/tts/memory_wall_sweep.py`
+* **What it does:** Orchestrates the test-time scaling batched generation:
+  - Takes the reasoning prompt and replicates it $K$ times to form a batch of size $K$, simulating $K$ independent test-time solution paths competing for GPU memory.
+  - Runs generation while tracking real-time peak allocation.
+  - **Gracefully intercepts `torch.cuda.OutOfMemoryError`**: Instead of crashing the experiment, it records the exact $K$ where the memory ceiling was breached, cleans GPU context, and moves to the next language.
+
+### 8. `scripts/run_memory_wall_sweep.py`
+* **What it does:** Entrypoint script that executes the Step 2 sweep, generates `results/memory_wall_empirical.csv` / `.md`, and plots `results/memory_wall_curve.png` showing the exact empirical points where Telugu and Hindi hit OOM compared to English.
+
+### 9. `tests/test_memory_tracker.py`
+* **What it does:** Unit tests verifying that GPU telemetry tracking correctly captures device properties, baseline VRAM, and peak memory calculation.
 
 ---
 
@@ -96,19 +133,30 @@ conda activate capstone
 cd d:\EBOOKS\Capstone\phase_1
 ```
 
-### Step 3: Run the Complete Tokenization Tax Analysis
+### Step 3: Run Step 1 (Tokenization Tax Analysis)
 ```powershell
 # Set PYTHONPATH so Python can locate the 'src' package
 $env:PYTHONPATH="d:\EBOOKS\Capstone\phase_1"
 
-# Execute the runner script (Runs entirely on CPU in ~15-20 seconds)
+# Execute Step 1 runner (Runs on CPU in ~15-20 seconds)
 python scripts/run_fertility_check.py
 ```
 
-### Step 4: Run Unit Tests
+### Step 4: Run Step 2 (Empirical Memory Wall Sweep on GPU)
 ```powershell
 $env:PYTHONPATH="d:\EBOOKS\Capstone\phase_1"
+
+# Execute Step 2 GPU runner (Profiles RTX 3050 VRAM across K paths)
+python scripts/run_memory_wall_sweep.py
+```
+
+### Step 5: Run Automated Unit Tests
+```powershell
+$env:PYTHONPATH="d:\EBOOKS\Capstone\phase_1"
+
+# Run tests for Step 1 & Step 2
 python tests/test_fertility.py
+python tests/test_memory_tracker.py
 ```
 
 ---

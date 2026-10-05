@@ -1,0 +1,24 @@
+# Configuration for Step 2: Empirical Memory Wall Sweep
+model:
+  id: "Qwen/Qwen2.5-0.5B"
+  torch_dtype: "float16"
+  device: "cuda"
+
+sweep:
+  max_new_tokens: 256
+  k_values: [1, 2, 4, 8, 12, 16, 20, 24]
+
+# Aligned math reasoning prompts of identical semantic content
+prompts:
+  English: >
+    Question: A fruit shop sold 15 bags of oranges in the morning and 22 bags in the evening.
+    If each bag contains 8 oranges and costs $12, how much total money did the shop earn?
+    Please solve this step-by-step to find the final answer.
+  Hindi: >
+    प्रश्न: एक फल की दुकान ने सुबह संतरे के 15 बैग और शाम को 22 बैग बेचे।
+    यदि प्रत्येक बैग में 8 संतरे हैं और उसकी कीमत ₹12 है, तो दुकान ने कुल कितने रुपये कमाए?
+    कृपया अंतिम उत्तर खोजने के लिए इसे चरण दर चरण हल करें।
+  Telugu: >
+    ప్రశ్న: ఒక పండ్ల దుకాణం ఉదయం 15 సంచుల నారింజలను మరియు సాయంత్రం 22 సంచులను విక్రయించింది.
+    ప్రతి సంచిలో 8 నారింజలు ఉండి దాని ధర ₹12 అయితే, దుకాణం సంపాదించిన మొత్తం నగదు ఎంత?
+    దయచేసి చివరి సమాధానాన్ని కనుగొనడానికి దీనిని దశలవారీగా పరిష్కరించండి.

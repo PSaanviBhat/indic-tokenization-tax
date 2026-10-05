@@ -1,0 +1,10 @@
+Tokenizer,Language,Total Tokens,Total Words,Tokens / Word,Tokens / Char,Tokens / Byte,Word Inflation (x EN)
+Qwen-2.5 (151k vocab),English,30667,24572,1.251,0.2079,0.2077,1.0
+Qwen-2.5 (151k vocab),Hindi,136058,28456,4.794,0.9312,0.3634,3.83
+Qwen-2.5 (151k vocab),Telugu,213710,18656,11.479,1.4496,0.5451,9.18
+Gemma-2/3 (256k vocab),English,30045,24572,1.225,0.2036,0.2034,1.0
+Gemma-2/3 (256k vocab),Hindi,54758,28456,1.935,0.3757,0.1467,1.58
+Gemma-2/3 (256k vocab),Telugu,86448,18656,4.645,0.5868,0.2207,3.79
+Sarvam-1 (68k vocab),English,34532,24572,1.411,0.2342,0.2339,1.0
+Sarvam-1 (68k vocab),Hindi,39838,28456,1.408,0.2738,0.107,1.0
+Sarvam-1 (68k vocab),Telugu,40195,18656,2.164,0.2737,0.1031,1.53

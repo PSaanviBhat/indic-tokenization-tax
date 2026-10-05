@@ -1,0 +1,52 @@
+# Analytical KV Cache Projection: Qwen2.5-0.5B (12 KB/token in fp16)
+
+| Model                       | Precision   |   KB / Token |   Base Trace Len |   K Paths |   English KV (GB) |   Hindi KV (GB) |   Telugu KV (GB) | Telugu Fits 6GB?   | Telugu Fits 24GB?   |
+|:----------------------------|:------------|-------------:|-----------------:|----------:|------------------:|----------------:|-----------------:|:-------------------|:--------------------|
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             1024 |         1 |             0.012 |           0.045 |            0.108 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             1024 |         4 |             0.047 |           0.18  |            0.43  | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             1024 |         8 |             0.094 |           0.359 |            0.861 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             1024 |        16 |             0.188 |           0.718 |            1.721 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             1024 |        32 |             0.375 |           1.436 |            3.442 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             1024 |        64 |             0.75  |           2.873 |            6.885 | OOM                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             2048 |         1 |             0.023 |           0.09  |            0.215 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             2048 |         4 |             0.094 |           0.359 |            0.861 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             2048 |         8 |             0.188 |           0.718 |            1.721 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             2048 |        16 |             0.375 |           1.436 |            3.442 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             2048 |        32 |             0.75  |           2.873 |            6.885 | OOM                | YES                 |
+| Qwen2.5-0.5B (Active Local) | fp16        |         12   |             2048 |        64 |             1.5   |           5.745 |           13.77  | OOM                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             1024 |         1 |             0.006 |           0.022 |            0.054 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             1024 |         4 |             0.023 |           0.09  |            0.215 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             1024 |         8 |             0.047 |           0.18  |            0.43  | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             1024 |        16 |             0.094 |           0.359 |            0.861 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             1024 |        32 |             0.188 |           0.718 |            1.721 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             1024 |        64 |             0.375 |           1.436 |            3.442 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             2048 |         1 |             0.012 |           0.045 |            0.108 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             2048 |         4 |             0.047 |           0.18  |            0.43  | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             2048 |         8 |             0.094 |           0.359 |            0.861 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             2048 |        16 |             0.188 |           0.718 |            1.721 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             2048 |        32 |             0.375 |           1.436 |            3.442 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int8        |          6   |             2048 |        64 |             0.75  |           2.873 |            6.885 | OOM                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             1024 |         1 |             0.003 |           0.011 |            0.027 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             1024 |         4 |             0.012 |           0.045 |            0.108 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             1024 |         8 |             0.023 |           0.09  |            0.215 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             1024 |        16 |             0.047 |           0.18  |            0.43  | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             1024 |        32 |             0.094 |           0.359 |            0.861 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             1024 |        64 |             0.188 |           0.718 |            1.721 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             2048 |         1 |             0.006 |           0.022 |            0.054 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             2048 |         4 |             0.023 |           0.09  |            0.215 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             2048 |         8 |             0.047 |           0.18  |            0.43  | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             2048 |        16 |             0.094 |           0.359 |            0.861 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             2048 |        32 |             0.188 |           0.718 |            1.721 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int4        |          3   |             2048 |        64 |             0.375 |           1.436 |            3.442 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             1024 |         1 |             0.001 |           0.006 |            0.013 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             1024 |         4 |             0.006 |           0.022 |            0.054 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             1024 |         8 |             0.012 |           0.045 |            0.108 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             1024 |        16 |             0.023 |           0.09  |            0.215 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             1024 |        32 |             0.047 |           0.18  |            0.43  | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             1024 |        64 |             0.094 |           0.359 |            0.861 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             2048 |         1 |             0.003 |           0.011 |            0.027 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             2048 |         4 |             0.012 |           0.045 |            0.108 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             2048 |         8 |             0.023 |           0.09  |            0.215 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             2048 |        16 |             0.047 |           0.18  |            0.43  | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             2048 |        32 |             0.094 |           0.359 |            0.861 | YES                | YES                 |
+| Qwen2.5-0.5B (Active Local) | int2        |          1.5 |             2048 |        64 |             0.188 |           0.718 |            1.721 | YES                | YES                 |

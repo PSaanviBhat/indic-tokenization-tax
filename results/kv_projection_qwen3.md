@@ -1,0 +1,52 @@
+# Analytical KV Cache Projection: Qwen3-0.6B (112 KB/token in fp16)
+
+| Model                        | Precision   |   KB / Token |   Base Trace Len |   K Paths |   English KV (GB) |   Hindi KV (GB) |   Telugu KV (GB) | Telugu Fits 6GB?   | Telugu Fits 24GB?   |
+|:-----------------------------|:------------|-------------:|-----------------:|----------:|------------------:|----------------:|-----------------:|:-------------------|:--------------------|
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             1024 |         1 |             0.109 |           0.419 |            1.004 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             1024 |         4 |             0.438 |           1.676 |            4.016 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             1024 |         8 |             0.875 |           3.351 |            8.032 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             1024 |        16 |             1.75  |           6.703 |           16.065 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             1024 |        32 |             3.5   |          13.405 |           32.13  | OOM                | OOM                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             1024 |        64 |             7     |          26.81  |           64.26  | OOM                | OOM                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             2048 |         1 |             0.219 |           0.838 |            2.008 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             2048 |         4 |             0.875 |           3.351 |            8.032 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             2048 |         8 |             1.75  |           6.703 |           16.065 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             2048 |        16 |             3.5   |          13.405 |           32.13  | OOM                | OOM                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             2048 |        32 |             7     |          26.81  |           64.26  | OOM                | OOM                 |
+| Qwen3-0.6B (Proposal Target) | fp16        |          112 |             2048 |        64 |            14     |          53.62  |          128.52  | OOM                | OOM                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             1024 |         1 |             0.055 |           0.209 |            0.502 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             1024 |         4 |             0.219 |           0.838 |            2.008 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             1024 |         8 |             0.438 |           1.676 |            4.016 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             1024 |        16 |             0.875 |           3.351 |            8.032 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             1024 |        32 |             1.75  |           6.703 |           16.065 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             1024 |        64 |             3.5   |          13.405 |           32.13  | OOM                | OOM                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             2048 |         1 |             0.109 |           0.419 |            1.004 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             2048 |         4 |             0.438 |           1.676 |            4.016 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             2048 |         8 |             0.875 |           3.351 |            8.032 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             2048 |        16 |             1.75  |           6.703 |           16.065 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             2048 |        32 |             3.5   |          13.405 |           32.13  | OOM                | OOM                 |
+| Qwen3-0.6B (Proposal Target) | int8        |           56 |             2048 |        64 |             7     |          26.81  |           64.26  | OOM                | OOM                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             1024 |         1 |             0.027 |           0.105 |            0.251 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             1024 |         4 |             0.109 |           0.419 |            1.004 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             1024 |         8 |             0.219 |           0.838 |            2.008 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             1024 |        16 |             0.438 |           1.676 |            4.016 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             1024 |        32 |             0.875 |           3.351 |            8.032 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             1024 |        64 |             1.75  |           6.703 |           16.065 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             2048 |         1 |             0.055 |           0.209 |            0.502 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             2048 |         4 |             0.219 |           0.838 |            2.008 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             2048 |         8 |             0.438 |           1.676 |            4.016 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             2048 |        16 |             0.875 |           3.351 |            8.032 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             2048 |        32 |             1.75  |           6.703 |           16.065 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int4        |           28 |             2048 |        64 |             3.5   |          13.405 |           32.13  | OOM                | OOM                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             1024 |         1 |             0.014 |           0.052 |            0.126 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             1024 |         4 |             0.055 |           0.209 |            0.502 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             1024 |         8 |             0.109 |           0.419 |            1.004 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             1024 |        16 |             0.219 |           0.838 |            2.008 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             1024 |        32 |             0.438 |           1.676 |            4.016 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             1024 |        64 |             0.875 |           3.351 |            8.032 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             2048 |         1 |             0.027 |           0.105 |            0.251 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             2048 |         4 |             0.109 |           0.419 |            1.004 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             2048 |         8 |             0.219 |           0.838 |            2.008 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             2048 |        16 |             0.438 |           1.676 |            4.016 | YES                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             2048 |        32 |             0.875 |           3.351 |            8.032 | OOM                | YES                 |
+| Qwen3-0.6B (Proposal Target) | int2        |           14 |             2048 |        64 |             1.75  |           6.703 |           16.065 | OOM                | YES                 |

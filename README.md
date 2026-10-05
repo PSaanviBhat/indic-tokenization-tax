@@ -82,7 +82,14 @@ Using target model specs (`Qwen3-0.6B`: 28 layers, 8 KV heads, dim 128 = **112 K
 
 $$\text{KV Bytes} = 2 \times n_{\text{layers}} \times n_{\text{kv}} \times d_{\text{head}} \times b_{\text{prec}} \times L \times K$$
 
-*Where $n_{\text{layers}}$ = 28 layers, $n_{\text{kv}}$ = 8 KV heads, $d_{\text{head}}$ = 128 head dim, $b_{\text{prec}}$ = bytes per value (fp16 = 2, int8 = 1, int4 = 0.5), $L$ = effective trace length, and $K$ = candidate paths.*
+**Parameter Definitions:**
+- $n_{\text{layers}} = 28$ decoder layers
+- $n_{\text{kv}} = 8$ key-value heads
+- $d_{\text{head}} = 128$ head dimension
+- $b_{\text{prec}}$: precision byte width (`fp16` = 2, `int8` = 1, `int4` = 0.5)
+- $L$: effective sequence length ($\text{base length} \times \text{inflation factor}$)
+- $K$: number of candidate reasoning paths
+
 
 | Precision | $K$ Paths | English KV (GB) | Hindi KV ($3.83\times$) | Telugu KV ($9.18\times$) | Telugu on RTX 3050 (6 GB)? | Telugu on RTX 4090 (24 GB)? |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |

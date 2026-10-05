@@ -45,6 +45,12 @@ data/processed/
 .cache/
 hf_cache/
 
+# PDF Documents
+*.pdf
+Capstone_Project_Proposal.pdf
+One pager CAPSTONE.pdf
+capstone_execution_plan.pdf
+
 # IDE and OS files
 .vscode/
 .idea/

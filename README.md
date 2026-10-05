@@ -80,7 +80,9 @@ Evaluated on **300 parallel sentences** with identical content from FLORES-200 a
 ### Analytical KV Cache Scaling Projections
 Using target model specs (`Qwen3-0.6B`: 28 layers, 8 KV heads, dim 128 = **112 KB/token in fp16**) across $K$ sampling paths with a 2,048 base token trace:
 
-$$\text{KV Bytes} = 2 \times n_{\text{layers}} \times n_{\text{kv\_heads}} \times d_{\text{head}} \times \text{bytes\_per\_precision} \times \text{seq\_len} \times K$$
+$$\text{KV Bytes} = 2 \times n_{\text{layers}} \times n_{\text{kv}} \times d_{\text{head}} \times b_{\text{prec}} \times L \times K$$
+
+*Where $n_{\text{layers}}$ = 28 layers, $n_{\text{kv}}$ = 8 KV heads, $d_{\text{head}}$ = 128 head dim, $b_{\text{prec}}$ = bytes per value (fp16 = 2, int8 = 1, int4 = 0.5), $L$ = effective trace length, and $K$ = candidate paths.*
 
 | Precision | $K$ Paths | English KV (GB) | Hindi KV ($3.83\times$) | Telugu KV ($9.18\times$) | Telugu on RTX 3050 (6 GB)? | Telugu on RTX 4090 (24 GB)? |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
